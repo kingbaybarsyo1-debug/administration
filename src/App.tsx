@@ -183,15 +183,15 @@ export default function App() {
         lowStockCount={stats.lowStockItems} 
       />
       
-      <main className="flex-1 w-full relative z-10 overflow-hidden">
+      <main className="flex-1 w-full relative z-10 overflow-hidden flex flex-col">
         {/* Content */}
-        <div className="max-w-[1600px] mx-auto px-4 md:px-8 h-full flex flex-col">
+        <div className="max-w-[1600px] mx-auto px-4 md:px-8 flex-1 w-full flex flex-col overflow-hidden">
           {isLoading ? (
             <div className="flex items-center justify-center h-full p-20">
               <LoadingSpinner />
             </div>
           ) : (
-            <div className="flex-1 overflow-hidden py-4 md:py-6">
+            <div className="flex-1 overflow-hidden py-4 md:py-6 flex flex-col">
               {renderContent()}
             </div>
           )}

@@ -123,3 +123,13 @@ export interface StoreSettings {
   currency: string;
   taxRate: number;
 }
+
+export interface Voucher {
+  id: string;
+  type: 'receipt' | 'payment';
+  date: string;
+  amount: number;
+  customerName: string;
+  description: string;
+  paymentMethod: string;
+}

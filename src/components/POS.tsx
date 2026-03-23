@@ -447,130 +447,86 @@ export const POS: React.FC<POSProps> = ({ products, customers, onAddSale, sales,
           </div>
         )}
 
-        {/* Top Bar - Metadata & Customer & Search */}
-        <div className="p-2 md:p-3 border-b border-slate-100 bg-white flex flex-col gap-2">
-          {/* Metadata Row */}
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-2">
-            <div className="flex flex-col gap-0.5">
-              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest">رقم الفاتورة</label>
-              <div className="bg-slate-50 px-2 py-1 rounded-md text-[9px] font-black text-slate-700 border border-slate-100">INV-2026-001</div>
-            </div>
-            <div className="flex flex-col gap-0.5">
-              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest">التاريخ</label>
-              <div className="bg-slate-50 px-2 py-1 rounded-md text-[9px] font-black text-slate-700 border border-slate-100">{new Date().toLocaleDateString('ar-SA')}</div>
-            </div>
-            <div className="flex flex-col gap-0.5">
-              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest">المستودع</label>
-              <select className="bg-slate-50 px-2 py-1 rounded-md text-[9px] font-black text-slate-700 border border-slate-100 outline-none">
-                <option>المستودع الرئيسي</option>
-                <option>مستودع الفرع</option>
-              </select>
-            </div>
-            <div className="flex flex-col gap-0.5">
-              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest">المندوب</label>
-              <select className="bg-slate-50 px-2 py-1 rounded-md text-[9px] font-black text-slate-700 border border-slate-100 outline-none">
-                <option>أحمد محمد</option>
-                <option>سارة علي</option>
-              </select>
-            </div>
-            <div className="flex flex-col gap-0.5">
-              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest">مستوى السعر</label>
-              <select className="bg-slate-50 px-2 py-1 rounded-md text-[9px] font-black text-slate-700 border border-slate-100 outline-none">
-                <option>سعر التجزئة</option>
-                <option>سعر الجملة</option>
-              </select>
-            </div>
-            <div className="flex flex-col gap-0.5">
-              <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest">طريقة الدفع</label>
-              <select className="bg-slate-50 px-2 py-1 rounded-md text-[9px] font-black text-slate-700 border border-slate-100 outline-none">
-                <option>نقدي</option>
-                <option>شبكة</option>
-                <option>آجل</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Search Row */}
-          <div className="flex flex-col md:flex-row gap-2 items-center">
-            <div className="flex items-center gap-2 flex-1 w-full">
-              <div className="relative flex-1 group">
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
-                  <User className="w-3.5 h-3.5" />
-                </div>
-                <select 
-                  value={selectedCustomerId}
-                  onChange={(e) => setSelectedCustomerId(e.target.value)}
-                  className="w-full pr-8 pl-3 py-1.5 bg-slate-50 border border-slate-100 rounded-lg text-[10px] font-black outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 appearance-none transition-all cursor-pointer text-slate-700"
-                >
-                  <option value="">عميل نقدي (Walk-in)</option>
-                  {customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-              </div>
-
-              <div className="relative flex-[2] group">
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
-                  <Search className="w-3.5 h-3.5" />
-                </div>
-                <input 
-                  type="text"
-                  placeholder="البحث عن منتج أو مسح الباركود..."
-                  className="w-full pr-8 pl-3 py-1.5 bg-slate-50 border border-slate-100 rounded-lg text-[10px] font-black outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-slate-700 placeholder:text-slate-400"
-                  value={cartSearchTerm}
-                  onChange={(e) => setCartSearchTerm(e.target.value)}
-                  onFocus={() => setIsSearchFocused(true)}
-                  onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                />
-                {isSearchFocused && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-xl shadow-2xl z-[80] max-h-60 overflow-y-auto custom-scrollbar">
-                    {filteredCartProducts.map(product => (
-                      <button
-                        key={product.id}
-                        onClick={() => {
-                          addToCart(product);
-                          setCartSearchTerm('');
-                        }}
-                        className="w-full flex items-center gap-4 p-3 hover:bg-indigo-50 transition-colors text-right border-b border-slate-50 last:border-0"
-                      >
-                        <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center font-black text-slate-400 text-[10px]">
-                          {product.name.charAt(0)}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="text-xs font-black text-slate-900 truncate">{product.name}</div>
-                          <div className="text-[10px] font-bold text-indigo-500">{product.price.toLocaleString()} ر.س</div>
-                        </div>
-                        <Plus className="w-4 h-4 text-indigo-600" />
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button 
-                onClick={() => setShowSuspended(!showSuspended)}
-                className={cn(
-                  "relative p-2.5 rounded-xl transition-all",
-                  showSuspended ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:text-slate-600"
-                )}
-                title="الفواتير المعلقة"
-              >
-                <Landmark className="w-5 h-5" />
-                {suspendedSales.length > 0 && (
-                  <span className="absolute -top-1 -left-1 w-5 h-5 bg-amber-500 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white">
-                    {suspendedSales.length}
-                  </span>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-
         {/* Main Content Area - Split View */}
         <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
           
           {/* Right Panel - Cart Items Table (Now on the Right) */}
           <div className="flex-1 flex flex-col bg-white overflow-hidden relative border-l border-slate-100">
+            {/* Search Row - Moved inside Right Panel */}
+            <div className="p-3 border-b border-slate-100 bg-slate-50/50 flex flex-col md:flex-row gap-2 items-center">
+              <div className="flex items-center gap-2 flex-1 w-full">
+                <div className="relative flex-1 group">
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
+                    <User className="w-3.5 h-3.5" />
+                  </div>
+                  <select 
+                    value={selectedCustomerId}
+                    onChange={(e) => setSelectedCustomerId(e.target.value)}
+                    className="w-full pr-8 pl-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-black outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 appearance-none transition-all cursor-pointer text-slate-700"
+                  >
+                    <option value="">عميل نقدي (Walk-in)</option>
+                    {customers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
+                </div>
+
+                <div className="relative flex-[2] group">
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors">
+                    <Search className="w-3.5 h-3.5" />
+                  </div>
+                  <input 
+                    type="text"
+                    placeholder="البحث عن منتج أو مسح الباركود..."
+                    className="w-full pr-8 pl-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-black outline-none focus:ring-2 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all text-slate-700 placeholder:text-slate-400"
+                    value={cartSearchTerm}
+                    onChange={(e) => setCartSearchTerm(e.target.value)}
+                    onFocus={() => setIsSearchFocused(true)}
+                    onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                  />
+                  {isSearchFocused && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-xl shadow-2xl z-[80] max-h-60 overflow-y-auto custom-scrollbar">
+                      {filteredCartProducts.map(product => (
+                        <button
+                          key={product.id}
+                          onClick={() => {
+                            addToCart(product);
+                            setCartSearchTerm('');
+                          }}
+                          className="w-full flex items-center gap-4 p-3 hover:bg-indigo-50 transition-colors text-right border-b border-slate-50 last:border-0"
+                        >
+                          <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center font-black text-slate-400 text-[10px]">
+                            {product.name.charAt(0)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-xs font-black text-slate-900 truncate">{product.name}</div>
+                            <div className="text-[10px] font-bold text-indigo-500">{product.price.toLocaleString()} ر.س</div>
+                          </div>
+                          <Plus className="w-4 h-4 text-indigo-600" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setShowSuspended(!showSuspended)}
+                  className={cn(
+                    "relative p-2 rounded-lg transition-all",
+                    showSuspended ? "bg-amber-100 text-amber-600" : "bg-slate-100 text-slate-400 hover:text-slate-600"
+                  )}
+                  title="الفواتير المعلقة"
+                >
+                  <Landmark className="w-4 h-4" />
+                  {suspendedSales.length > 0 && (
+                    <span className="absolute -top-1 -left-1 w-4 h-4 bg-amber-500 text-white text-[8px] font-black rounded-full flex items-center justify-center border-2 border-white">
+                      {suspendedSales.length}
+                    </span>
+                  )}
+                </button>
+              </div>
+            </div>
+
             {showSuspended && (
               <div className="absolute top-0 left-0 right-0 bg-amber-50 border-b border-amber-100 p-4 z-50 animate-in slide-in-from-top duration-300">
                 <div className="flex items-center justify-between mb-3">
@@ -611,13 +567,13 @@ export const POS: React.FC<POSProps> = ({ products, customers, onAddSale, sales,
               <table className="w-full text-right border-collapse">
                 <thead className="sticky top-0 bg-white z-10">
                   <tr className="border-b border-slate-100">
-                    <th className="py-3 px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">المنتج</th>
-                    <th className="py-3 px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">الوحدة</th>
-                    <th className="py-3 px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">السعر</th>
-                    <th className="py-3 px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">الكمية</th>
-                    <th className="py-3 px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">خصم</th>
-                    <th className="py-3 px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">الضريبة</th>
-                    <th className="py-3 px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">الإجمالي</th>
+                    <th className="py-3 px-2 text-xs font-black text-slate-400 uppercase tracking-widest">المنتج</th>
+                    <th className="py-3 px-2 text-xs font-black text-slate-400 uppercase tracking-widest">الوحدة</th>
+                    <th className="py-3 px-2 text-xs font-black text-slate-400 uppercase tracking-widest">السعر</th>
+                    <th className="py-3 px-2 text-xs font-black text-slate-400 uppercase tracking-widest">الكمية</th>
+                    <th className="py-3 px-2 text-xs font-black text-slate-400 uppercase tracking-widest">خصم</th>
+                    <th className="py-3 px-2 text-xs font-black text-slate-400 uppercase tracking-widest">الضريبة</th>
+                    <th className="py-3 px-2 text-xs font-black text-slate-400 uppercase tracking-widest">الإجمالي</th>
                     <th className="py-3 px-2 text-[10px] font-black text-slate-400 uppercase tracking-widest"></th>
                   </tr>
                 </thead>
@@ -634,23 +590,23 @@ export const POS: React.FC<POSProps> = ({ products, customers, onAddSale, sales,
                       >
                         <td className="py-4 px-2">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-slate-50 rounded-lg flex items-center justify-center font-black text-slate-400 group-hover:bg-indigo-600 group-hover:text-white transition-all text-[10px]">
+                            <div className="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center font-black text-slate-400 group-hover:bg-indigo-600 group-hover:text-white transition-all text-xs">
                               {item.productName.charAt(0)}
                             </div>
                             <div className="flex flex-col">
-                              <span className="text-xs font-black text-slate-900">{item.productName}</span>
+                              <span className="text-base font-black text-slate-900">{item.productName}</span>
                               <button 
                                 onClick={() => toggleCostVisibility(item.productId)}
-                                className="text-[8px] font-bold text-slate-400 hover:text-indigo-500 flex items-center gap-1 w-fit"
+                                className="text-[10px] font-bold text-slate-400 hover:text-indigo-500 flex items-center gap-1 w-fit"
                               >
-                                {visibleCosts.has(item.productId) ? <Eye className="w-2 h-2" /> : <EyeOff className="w-2 h-2" />}
+                                {visibleCosts.has(item.productId) ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
                                 {visibleCosts.has(item.productId) ? `تكلفة: ${products.find(p => p.id === item.productId)?.purchasePrice || 0} ر.س` : 'عرض التكلفة'}
                               </button>
                             </div>
                           </div>
                         </td>
                         <td className="py-4 px-2">
-                          <span className="text-[10px] font-bold text-slate-500">حبة</span>
+                          <span className="text-xs font-bold text-slate-500">حبة</span>
                         </td>
                         <td className="py-4 px-2">
                           <div className="flex items-center gap-1">
@@ -658,24 +614,24 @@ export const POS: React.FC<POSProps> = ({ products, customers, onAddSale, sales,
                               type="number"
                               value={item.price}
                               onChange={(e) => updateItemPrice(item.productId, Number(e.target.value))}
-                              className="w-16 text-xs font-bold text-indigo-500 bg-transparent border-b border-transparent hover:border-indigo-200 focus:border-indigo-500 outline-none text-center"
+                              className="w-20 text-sm font-bold text-indigo-500 bg-transparent border-b border-transparent hover:border-indigo-200 focus:border-indigo-500 outline-none text-center"
                             />
-                            <span className="text-[10px] font-bold text-indigo-400">ر.س</span>
+                            <span className="text-xs font-bold text-indigo-400">ر.س</span>
                           </div>
                         </td>
                         <td className="py-4 px-2">
                           <div className="flex items-center bg-slate-100 rounded-lg p-1 w-fit">
-                            <button onClick={() => updateQuantity(item.productId, -1)} className="w-5 h-5 flex items-center justify-center hover:bg-white text-slate-400 hover:text-indigo-600 rounded transition-all">
-                              <Minus className="w-3 h-3" />
+                            <button onClick={() => updateQuantity(item.productId, -1)} className="w-6 h-6 flex items-center justify-center hover:bg-white text-slate-400 hover:text-indigo-600 rounded transition-all">
+                              <Minus className="w-4 h-4" />
                             </button>
                             <input 
                               type="number"
                               value={item.quantity}
                               onChange={(e) => updateItemQuantity(item.productId, Number(e.target.value))}
-                              className="w-8 text-center text-xs font-black text-slate-900 bg-transparent outline-none appearance-none"
+                              className="w-10 text-center text-sm font-black text-slate-900 bg-transparent outline-none appearance-none"
                             />
-                            <button onClick={() => updateQuantity(item.productId, 1)} className="w-5 h-5 flex items-center justify-center hover:bg-white text-slate-400 hover:text-indigo-600 rounded transition-all">
-                              <Plus className="w-3 h-3" />
+                            <button onClick={() => updateQuantity(item.productId, 1)} className="w-6 h-6 flex items-center justify-center hover:bg-white text-slate-400 hover:text-indigo-600 rounded transition-all">
+                              <Plus className="w-4 h-4" />
                             </button>
                           </div>
                         </td>
@@ -685,18 +641,18 @@ export const POS: React.FC<POSProps> = ({ products, customers, onAddSale, sales,
                               type="number"
                               value={item.discountAmount || ''}
                               onChange={(e) => updateItemDiscount(item.productId, 'amount', Number(e.target.value))}
-                              className="w-12 text-xs font-bold text-red-400 bg-transparent border-b border-transparent hover:border-red-200 focus:border-red-500 outline-none text-center"
+                              className="w-16 text-sm font-bold text-red-400 bg-transparent border-b border-transparent hover:border-red-200 focus:border-red-500 outline-none text-center"
                               placeholder="0"
                             />
-                            <span className="text-[10px] font-bold text-red-300">ر.س</span>
+                            <span className="text-xs font-bold text-red-300">ر.س</span>
                           </div>
                         </td>
                         <td className="py-4 px-2">
-                          <span className="text-[10px] font-bold text-slate-400">15%</span>
+                          <span className="text-xs font-bold text-slate-400">15%</span>
                         </td>
                         <td className="py-4 px-2">
                           <div className="flex flex-col items-end">
-                            <span className="text-xs font-black text-slate-900">{(item.price * item.quantity - (item.discountAmount || 0)).toLocaleString()} ر.س</span>
+                            <span className="text-sm font-black text-slate-900">{(item.price * item.quantity - (item.discountAmount || 0)).toLocaleString()} ر.س</span>
                             {item.discountAmount ? (
                               <span className="text-[8px] font-bold text-slate-400 line-through">{(item.price * item.quantity).toLocaleString()} ر.س</span>
                             ) : null}
@@ -725,20 +681,20 @@ export const POS: React.FC<POSProps> = ({ products, customers, onAddSale, sales,
 
             {/* Product Details Box - Green box at bottom of cart */}
             {cart.length > 0 && (
-              <div className="p-4 bg-emerald-50 border-t border-emerald-100">
+              <div className="p-6 bg-emerald-600 text-white border-t border-emerald-700 shadow-[0_-10px_30px_-15px_rgba(16,185,129,0.3)]">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center text-white font-black text-lg">
+                  <div className="flex items-center gap-6">
+                    <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-inner">
                       {cart[cart.length - 1].productName.charAt(0)}
                     </div>
                     <div>
-                      <h4 className="text-sm font-black text-emerald-900">{cart[cart.length - 1].productName}</h4>
-                      <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">آخر منتج تمت إضافته</p>
+                      <h4 className="text-xl font-black text-white leading-tight">{cart[cart.length - 1].productName}</h4>
+                      <p className="text-xs font-bold text-emerald-100 uppercase tracking-widest mt-1">آخر منتج تمت إضافته</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-lg font-black text-emerald-900">{cart[cart.length - 1].price.toLocaleString()} ر.س</div>
-                    <div className="text-[10px] font-bold text-emerald-600">الكمية: {cart[cart.length - 1].quantity}</div>
+                    <div className="text-3xl font-black text-white tracking-tighter">{cart[cart.length - 1].price.toLocaleString()} ر.س</div>
+                    <div className="text-sm font-bold text-emerald-100 mt-1">الكمية: {cart[cart.length - 1].quantity}</div>
                   </div>
                 </div>
               </div>

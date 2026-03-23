@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Product, Customer, Sale, Supplier, SupplierReceipt, SaleReturn, User, StoreSettings } from '../types';
+import { Product, Customer, Sale, Supplier, SupplierReceipt, SaleReturn, User, StoreSettings, Voucher } from '../types';
 
 const INITIAL_STORE_SETTINGS: StoreSettings = {
   name: 'برو سيلز للأنظمة',
@@ -9,6 +9,11 @@ const INITIAL_STORE_SETTINGS: StoreSettings = {
   currency: 'SAR',
   taxRate: 15,
 };
+
+const INITIAL_VOUCHERS: Voucher[] = [
+  { id: 'V-001', type: 'receipt', date: '2024-03-20', amount: 1500, customerName: 'أحمد محمد', description: 'دفعة من الحساب', paymentMethod: 'cash' },
+  { id: 'V-002', type: 'payment', date: '2024-03-21', amount: 500, customerName: 'شركة التوريد', description: 'سداد فاتورة مشتريات', paymentMethod: 'bank_transfer' },
+];
 
 const INITIAL_USERS: User[] = [
   { id: '1', name: 'أدمن النظام', username: 'admin', role: 'admin', email: 'admin@prosales.com', status: 'active', lastLogin: '2024-03-21 14:30' },
@@ -68,6 +73,7 @@ export function useData() {
   const [sales, setSales] = useState<Sale[]>([]);
   const [receipts, setReceipts] = useState<SupplierReceipt[]>([]);
   const [returns, setReturns] = useState<SaleReturn[]>([]);
+  const [vouchers, setVouchers] = useState<Voucher[]>([]);
   const [storeSettings, setStoreSettings] = useState<StoreSettings>(INITIAL_STORE_SETTINGS);
 
   useEffect(() => {
@@ -93,6 +99,9 @@ export function useData() {
 
       const savedReturns = localStorage.getItem('sales_returns');
       setReturns(savedReturns ? JSON.parse(savedReturns) : []);
+
+      const savedVouchers = localStorage.getItem('sales_vouchers');
+      setVouchers(savedVouchers ? JSON.parse(savedVouchers) : INITIAL_VOUCHERS);
 
       const savedSettings = localStorage.getItem('sales_settings');
       setStoreSettings(savedSettings ? JSON.parse(savedSettings) : INITIAL_STORE_SETTINGS);
@@ -132,8 +141,22 @@ export function useData() {
   }, [returns, isLoading]);
 
   useEffect(() => {
+    if (!isLoading) localStorage.setItem('sales_vouchers', JSON.stringify(vouchers));
+  }, [vouchers, isLoading]);
+
+  useEffect(() => {
     if (!isLoading) localStorage.setItem('sales_settings', JSON.stringify(storeSettings));
   }, [storeSettings, isLoading]);
+
+  const addVoucher = (voucher: Omit<Voucher, 'id' | 'date'>) => {
+    const newVoucher: Voucher = {
+      ...voucher,
+      id: `V-${String(vouchers.length + 1).padStart(3, '0')}`,
+      date: new Date().toISOString().split('T')[0],
+    };
+    setVouchers([newVoucher, ...vouchers]);
+    return newVoucher;
+  };
 
   const addSale = (sale: Omit<Sale, 'id' | 'date'>) => {
     const newSale: Sale = {
@@ -224,6 +247,7 @@ export function useData() {
     sales, addSale, deleteSale,
     receipts, addReceipt,
     returns, addReturn,
+    vouchers, addVoucher,
     storeSettings, setStoreSettings
   };
 }

@@ -20,7 +20,7 @@ export const Receipt: React.FC<ReceiptProps> = ({
   const taxTotal = sale.taxTotal || (subtotal - discountTotal) * 0.15;
 
   return (
-    <div className="receipt-container p-4 bg-white text-black font-mono text-sm w-[80mm] mx-auto" dir="rtl">
+    <div className="receipt-container p-2 bg-white text-black font-mono text-sm w-full max-w-[80mm] mx-auto" dir="rtl">
       <div className="text-center mb-4">
         <h2 className="text-xl font-black mb-1">{businessName}</h2>
         <p className="text-[10px]">{address}</p>
@@ -110,18 +110,24 @@ export const Receipt: React.FC<ReceiptProps> = ({
           }
           /* Position the receipt at the top left of the printed page */
           .receipt-container {
-            position: absolute;
+            position: fixed;
             left: 0;
             top: 0;
-            width: 80mm;
+            width: 72mm;
             margin: 0;
-            padding: 5mm;
+            padding: 2mm;
             background: white;
+            box-shadow: none;
           }
           /* Hide scrollbars and other UI elements */
           @page {
             margin: 0;
-            size: auto;
+            size: 80mm auto;
+          }
+          html, body {
+            margin: 0;
+            padding: 0;
+            height: auto;
           }
         }
       `}} />

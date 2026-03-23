@@ -53,30 +53,28 @@ export const BarcodeLabel: React.FC<BarcodeLabelProps> = ({
             padding: 0;
             background: white;
           }
-          /* Hide everything in the document */
-          body > *:not(.barcode-label-container) {
-            display: none !important;
+          /* Hide everything on the page */
+          body * {
+            visibility: hidden;
           }
-          /* Show only the barcode container */
+          /* Show only the barcode container and its children */
+          .barcode-label-container, .barcode-label-container * {
+            visibility: visible !important;
+          }
+          /* Position the barcode container at the top left of the printed page */
           .barcode-label-container {
             display: flex !important;
-            visibility: visible !important;
-            position: absolute !important;
+            position: fixed !important;
             top: 0 !important;
             left: 0 !important;
             width: 50mm !important;
             height: 30mm !important;
             margin: 0 !important;
-            padding: 8px !important;
+            padding: 4mm !important;
             background: white !important;
             z-index: 999999 !important;
             border: none !important;
             box-shadow: none !important;
-            page-break-after: avoid;
-            page-break-before: avoid;
-          }
-          .barcode-label-container * {
-            visibility: visible !important;
           }
           /* Specifically handle the flex/grid items inside */
           .barcode-label-container .flex {
