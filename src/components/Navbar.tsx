@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { useData } from '../hooks/useData';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -30,15 +31,17 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, lowStockCount }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { storeSettings } = useData();
 
   const menuItems = [
+    { id: 'dashboard', label: 'الرئيسية', icon: LayoutDashboard },
     { id: 'pos', label: 'نقطة البيع', icon: Monitor },
-    { id: 'foundation', label: 'البيانات التأسيسية', icon: LayoutDashboard },
     { id: 'inventory', label: 'المخزون', icon: Package, badge: lowStockCount > 0 ? lowStockCount : null },
-    { id: 'purchases', label: 'المشتريات', icon: Truck },
+    { id: 'receipts', label: 'المشتريات', icon: Truck },
     { id: 'sales', label: 'المبيعات', icon: ShoppingCart },
     { id: 'vouchers', label: 'السندات', icon: RotateCcw },
-    { id: 'settings', label: 'الاعدادات', icon: Settings },
+    { id: 'returns', label: 'المرتجعات', icon: RotateCcw },
+    { id: 'settings', label: 'الإعدادات', icon: Settings },
     { id: 'reports', label: 'التقارير', icon: BarChart3 },
   ];
 
@@ -57,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, lowStoc
               <ShoppingCart className="w-5 h-5 text-white" />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-lg font-black tracking-tight whitespace-nowrap text-slate-900">فاتورتك الذكية</h1>
+              <h1 className="text-lg font-black tracking-tight whitespace-nowrap text-slate-900">{storeSettings.name}</h1>
               <span className="text-[9px] text-indigo-600 font-bold tracking-widest uppercase">نظام إدارة المبيعات</span>
             </div>
           </div>
@@ -109,7 +112,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, lowStoc
         >
           {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
-        <h1 className="text-lg font-black tracking-tight text-slate-900">فاتورتك الذكية</h1>
+        <h1 className="text-lg font-black tracking-tight text-slate-900">{storeSettings.name}</h1>
         <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
           <ShoppingCart className="w-5 h-5 text-white" />
         </div>

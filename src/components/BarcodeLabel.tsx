@@ -1,21 +1,22 @@
 import React from 'react';
 import Barcode from 'react-barcode';
 import { Product } from '../types';
+import { useData } from '../hooks/useData';
 
 interface BarcodeLabelProps {
   product: Product;
-  businessName?: string;
 }
 
 export const BarcodeLabel: React.FC<BarcodeLabelProps> = ({ 
-  product, 
-  businessName = "مؤسسة الأناقة الباهرة للملابس الجاهزة" 
+  product
 }) => {
+  const { storeSettings } = useData();
+  const businessName = storeSettings.name;
+
   return (
     <div className="barcode-label-container bg-white text-black p-2 w-[50mm] h-[30mm] flex flex-col items-center justify-center border border-slate-200 rounded-xl overflow-hidden" dir="rtl">
       <div className="text-center leading-tight mb-0.5">
-        <p className="text-[9px] font-black">مؤسسة الأناقة الباهرة للملابس</p>
-        <p className="text-[9px] font-black">الجاهزة</p>
+        <p className="text-[9px] font-black">{businessName}</p>
       </div>
       
       <div className="text-center mb-1">
@@ -47,17 +48,20 @@ export const BarcodeLabel: React.FC<BarcodeLabelProps> = ({
             size: 50mm 30mm;
             margin: 0;
           }
+          body {
+            margin: 0;
+            padding: 0;
+            background: white;
+          }
           /* Hide everything in the document */
-          body * {
-            visibility: hidden;
+          body > *:not(.barcode-label-container) {
+            display: none !important;
           }
           /* Show only the barcode container */
-          .barcode-label-container, .barcode-label-container * {
-            visibility: visible;
-          }
           .barcode-label-container {
             display: flex !important;
-            position: fixed !important;
+            visibility: visible !important;
+            position: absolute !important;
             top: 0 !important;
             left: 0 !important;
             width: 50mm !important;
@@ -66,10 +70,13 @@ export const BarcodeLabel: React.FC<BarcodeLabelProps> = ({
             padding: 8px !important;
             background: white !important;
             z-index: 999999 !important;
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
             border: none !important;
             box-shadow: none !important;
+            page-break-after: avoid;
+            page-break-before: avoid;
+          }
+          .barcode-label-container * {
+            visibility: visible !important;
           }
           /* Specifically handle the flex/grid items inside */
           .barcode-label-container .flex {

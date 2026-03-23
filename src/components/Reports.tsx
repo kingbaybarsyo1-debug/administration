@@ -9,21 +9,29 @@ import {
   ArrowUpRight,
   ShieldCheck,
   Zap,
-  Globe
+  Globe,
+  Truck,
+  RotateCcw
 } from 'lucide-react';
 import { DashboardStats } from '../types';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { useData } from '../hooks/useData';
 
 interface ReportsProps {
   stats: DashboardStats;
 }
 
 export const Reports: React.FC<ReportsProps> = ({ stats }) => {
+  const { storeSettings } = useData();
+
   const exportToCSV = () => {
     const rows = [
       ['Report', 'Value'],
+      ['Store Name', storeSettings.name],
       ['Total Sales', stats.totalSales],
+      ['Total Purchases', stats.totalPurchases],
+      ['Total Returns', stats.totalReturns],
       ['Total Orders', stats.totalOrders],
       ['Total Customers', stats.totalCustomers],
       ['Low Stock Items', stats.lowStockItems],
@@ -43,7 +51,7 @@ export const Reports: React.FC<ReportsProps> = ({ stats }) => {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `dashboard_report_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute("download", `${storeSettings.name}_report_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -52,7 +60,7 @@ export const Reports: React.FC<ReportsProps> = ({ stats }) => {
   const exportToPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(20);
-    doc.text('Dashboard Statistics Report', 105, 15, { align: 'center' });
+    doc.text(`${storeSettings.name} - Dashboard Report`, 105, 15, { align: 'center' });
     doc.setFontSize(12);
     doc.text(`Generated on: ${new Date().toLocaleString()}`, 105, 25, { align: 'center' });
 
@@ -60,7 +68,10 @@ export const Reports: React.FC<ReportsProps> = ({ stats }) => {
       startY: 35,
       head: [['Metric', 'Value']],
       body: [
+        ['Store Name', storeSettings.name],
         ['Total Sales', `${stats.totalSales.toLocaleString()} SAR`],
+        ['Total Purchases', `${stats.totalPurchases?.toLocaleString() || 0} SAR`],
+        ['Total Returns', `${stats.totalReturns?.toLocaleString() || 0} SAR`],
         ['Total Orders', stats.totalOrders],
         ['Total Customers', stats.totalCustomers],
         ['Total Users', stats.totalUsers],
@@ -90,7 +101,7 @@ export const Reports: React.FC<ReportsProps> = ({ stats }) => {
       headStyles: { fillColor: [16, 185, 129] }
     });
 
-    doc.save(`dashboard_report_${new Date().toISOString().split('T')[0]}.pdf`);
+    doc.save(`${storeSettings.name}_report_${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
   return (
@@ -147,6 +158,8 @@ export const Reports: React.FC<ReportsProps> = ({ stats }) => {
             <div className="space-y-8">
               {[
                 { label: 'إجمالي المبيعات', value: `${stats.totalSales.toLocaleString()} ر.س`, icon: DollarSign, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+                { label: 'إجمالي المشتريات', value: `${(stats.totalPurchases || 0).toLocaleString()} ر.س`, icon: Truck, color: 'text-orange-600', bg: 'bg-orange-50' },
+                { label: 'إجمالي المرتجعات', value: `${(stats.totalReturns || 0).toLocaleString()} ر.س`, icon: RotateCcw, color: 'text-rose-600', bg: 'bg-rose-50' },
                 { label: 'عدد الطلبات', value: stats.totalOrders, icon: Package, color: 'text-indigo-600', bg: 'bg-indigo-50' },
                 { label: 'قاعدة العملاء', value: stats.totalCustomers, icon: Globe, color: 'text-blue-600', bg: 'bg-blue-50' },
                 { label: 'المخزون المنخفض', value: stats.lowStockItems, icon: TrendingUp, color: 'text-rose-600', bg: 'bg-rose-50' }

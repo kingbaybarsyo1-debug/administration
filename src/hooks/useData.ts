@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Product, Customer, Sale, Supplier, SupplierReceipt, SaleReturn, User } from '../types';
+import { Product, Customer, Sale, Supplier, SupplierReceipt, SaleReturn, User, StoreSettings } from '../types';
+
+const INITIAL_STORE_SETTINGS: StoreSettings = {
+  name: 'برو سيلز للأنظمة',
+  address: 'الرياض، المملكة العربية السعودية',
+  phone: '0500000000',
+  email: 'info@prosales.com',
+  currency: 'SAR',
+  taxRate: 15,
+};
 
 const INITIAL_USERS: User[] = [
   { id: '1', name: 'أدمن النظام', username: 'admin', role: 'admin', email: 'admin@prosales.com', status: 'active', lastLogin: '2024-03-21 14:30' },
@@ -59,6 +68,7 @@ export function useData() {
   const [sales, setSales] = useState<Sale[]>([]);
   const [receipts, setReceipts] = useState<SupplierReceipt[]>([]);
   const [returns, setReturns] = useState<SaleReturn[]>([]);
+  const [storeSettings, setStoreSettings] = useState<StoreSettings>(INITIAL_STORE_SETTINGS);
 
   useEffect(() => {
     // Simulate initial data fetch
@@ -83,6 +93,9 @@ export function useData() {
 
       const savedReturns = localStorage.getItem('sales_returns');
       setReturns(savedReturns ? JSON.parse(savedReturns) : []);
+
+      const savedSettings = localStorage.getItem('sales_settings');
+      setStoreSettings(savedSettings ? JSON.parse(savedSettings) : INITIAL_STORE_SETTINGS);
 
       setIsLoading(false);
     }, 800);
@@ -117,6 +130,10 @@ export function useData() {
   useEffect(() => {
     if (!isLoading) localStorage.setItem('sales_returns', JSON.stringify(returns));
   }, [returns, isLoading]);
+
+  useEffect(() => {
+    if (!isLoading) localStorage.setItem('sales_settings', JSON.stringify(storeSettings));
+  }, [storeSettings, isLoading]);
 
   const addSale = (sale: Omit<Sale, 'id' | 'date'>) => {
     const newSale: Sale = {
@@ -206,6 +223,7 @@ export function useData() {
     suppliers, setSuppliers,
     sales, addSale, deleteSale,
     receipts, addReceipt,
-    returns, addReturn
+    returns, addReturn,
+    storeSettings, setStoreSettings
   };
 }

@@ -13,7 +13,9 @@ import {
   ShoppingCart,
   Activity,
   Monitor,
-  BarChart3
+  BarChart3,
+  Truck,
+  RotateCcw
 } from 'lucide-react';
 import { 
   AreaChart, 
@@ -38,10 +40,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ stats, onNavigate }) => {
   const today = new Date().toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   const statCards = [
-    { label: 'عدد فواتير اليوم', value: '124', icon: Eye, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-    { label: 'عدد الفواتير خلال الشهر', value: '3,450', icon: ShoppingCart, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { label: 'قيمة مبيعات اليوم', value: '12,450 ر.س', icon: ShoppingBag, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'قيمة المبيعات خلال الشهر', value: '450,000 ر.س', icon: Activity, color: 'text-violet-600', bg: 'bg-violet-50' },
+    { label: 'إجمالي المبيعات', value: `${stats.totalSales.toLocaleString()} ر.س`, icon: ShoppingBag, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { label: 'إجمالي المشتريات', value: `${(stats.totalPurchases || 0).toLocaleString()} ر.س`, icon: Truck, color: 'text-orange-600', bg: 'bg-orange-50' },
+    { label: 'إجمالي المرتجعات', value: `${(stats.totalReturns || 0).toLocaleString()} ر.س`, icon: RotateCcw, color: 'text-rose-600', bg: 'bg-rose-50' },
+    { label: 'عدد الفواتير', value: stats.totalOrders.toLocaleString(), icon: Eye, color: 'text-emerald-600', bg: 'bg-emerald-50' },
   ];
 
   return (

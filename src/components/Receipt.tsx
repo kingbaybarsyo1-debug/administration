@@ -1,21 +1,20 @@
 import React from 'react';
 import { Sale, SaleItem, Payment } from '../types';
+import { useData } from '../hooks/useData';
 
 interface ReceiptProps {
   sale: Sale;
-  businessName?: string;
-  address?: string;
-  phone?: string;
-  vatNumber?: string;
 }
 
 export const Receipt: React.FC<ReceiptProps> = ({ 
-  sale, 
-  businessName = "متجر النخبة", 
-  address = "الرياض، المملكة العربية السعودية", 
-  phone = "0500000000",
-  vatNumber = "123456789012345"
+  sale
 }) => {
+  const { storeSettings } = useData();
+  const businessName = storeSettings.name;
+  const address = storeSettings.address;
+  const phone = storeSettings.phone;
+  const vatNumber = storeSettings.taxNumber || "123456789012345";
+
   const subtotal = sale.subtotal || sale.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const discountTotal = sale.discountTotal || 0;
   const taxTotal = sale.taxTotal || (subtotal - discountTotal) * 0.15;

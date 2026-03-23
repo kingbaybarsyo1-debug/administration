@@ -10,13 +10,14 @@ import { Users } from './components/Users';
 import { Customers } from './components/Customers';
 import { Reports } from './components/Reports';
 import { Settings } from './components/Settings';
+import { Vouchers } from './components/Vouchers';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { useData } from './hooks/useData';
 import { Bell, Search, User, AlertTriangle } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('pos');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const { 
     isLoading,
     users, setUsers,
@@ -51,6 +52,8 @@ export default function App() {
 
   const stats = useMemo(() => {
     const totalSales = sales.reduce((sum, s) => sum + s.total, 0);
+    const totalPurchases = receipts.reduce((sum, r) => sum + r.total, 0);
+    const totalReturns = returns.reduce((sum, r) => sum + r.refundAmount, 0);
     const lowStockItems = products.filter(p => p.stock <= 5).length;
     
     const totalInventoryValue = products.reduce((sum, p) => sum + ((p.purchasePrice || 0) * p.stock), 0);
@@ -74,6 +77,8 @@ export default function App() {
 
     return {
       totalSales,
+      totalPurchases,
+      totalReturns,
       totalOrders: sales.length,
       totalCustomers: customers.length,
       totalUsers: users.length,
@@ -83,7 +88,7 @@ export default function App() {
       salesByMonth,
       topProducts
     };
-  }, [sales, products, customers, users]);
+  }, [sales, products, customers, users, receipts, returns]);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -117,6 +122,8 @@ export default function App() {
             onAddSale={addSale} 
           />
         );
+      case 'vouchers':
+        return <Vouchers />;
       case 'returns':
         return (
           <Returns 
@@ -176,15 +183,17 @@ export default function App() {
         lowStockCount={stats.lowStockItems} 
       />
       
-      <main className="flex-1 w-full relative z-10">
+      <main className="flex-1 w-full relative z-10 overflow-hidden">
         {/* Content */}
-        <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-6 md:py-10 h-full">
+        <div className="max-w-[1600px] mx-auto px-4 md:px-8 h-full flex flex-col">
           {isLoading ? (
             <div className="flex items-center justify-center h-full p-20">
               <LoadingSpinner />
             </div>
           ) : (
-            renderContent()
+            <div className="flex-1 overflow-hidden py-4 md:py-6">
+              {renderContent()}
+            </div>
           )}
         </div>
       </main>

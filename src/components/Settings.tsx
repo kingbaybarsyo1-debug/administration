@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   Settings as SettingsIcon, 
   Store, 
@@ -11,17 +11,19 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { useData } from '../hooks/useData';
 
 export const Settings: React.FC = () => {
-  const [businessName, setBusinessName] = useState('برو سيلز للأنظمة');
-  const [taxRate, setTaxRate] = useState(15);
-  const [currency, setCurrency] = useState('SAR');
-  const [language, setLanguage] = useState('ar');
+  const { storeSettings, setStoreSettings } = useData();
 
   const handleSave = () => {
     toast.success('تم حفظ الإعدادات بنجاح', {
       icon: <CheckCircle2 className="w-5 h-5 text-emerald-500" />
     });
+  };
+
+  const updateSetting = (key: string, value: any) => {
+    setStoreSettings({ ...storeSettings, [key]: value });
   };
 
   const sections = [
@@ -33,8 +35,11 @@ export const Settings: React.FC = () => {
       color: 'text-indigo-600',
       bg: 'bg-indigo-50',
       fields: [
-        { label: 'اسم المتجر', value: businessName, onChange: setBusinessName, type: 'text' },
-        { label: 'العملة الافتراضية', value: currency, onChange: setCurrency, type: 'select', options: ['SAR', 'USD', 'AED', 'KWD'] },
+        { label: 'اسم المتجر', value: storeSettings.name, onChange: (v: string) => updateSetting('name', v), type: 'text' },
+        { label: 'العنوان', value: storeSettings.address, onChange: (v: string) => updateSetting('address', v), type: 'text' },
+        { label: 'رقم الهاتف', value: storeSettings.phone, onChange: (v: string) => updateSetting('phone', v), type: 'text' },
+        { label: 'البريد الإلكتروني', value: storeSettings.email, onChange: (v: string) => updateSetting('email', v), type: 'text' },
+        { label: 'العملة الافتراضية', value: storeSettings.currency, onChange: (v: string) => updateSetting('currency', v), type: 'select', options: ['SAR', 'USD', 'AED', 'KWD'] },
       ]
     },
     {
@@ -45,7 +50,8 @@ export const Settings: React.FC = () => {
       color: 'text-emerald-600',
       bg: 'bg-emerald-50',
       fields: [
-        { label: 'نسبة الضريبة (%)', value: taxRate, onChange: (v: any) => setTaxRate(Number(v)), type: 'number' },
+        { label: 'نسبة الضريبة (%)', value: storeSettings.taxRate, onChange: (v: any) => updateSetting('taxRate', Number(v)), type: 'number' },
+        { label: 'الرقم الضريبي', value: storeSettings.taxNumber || '', onChange: (v: string) => updateSetting('taxNumber', v), type: 'text' },
       ]
     },
     {
@@ -56,7 +62,7 @@ export const Settings: React.FC = () => {
       color: 'text-blue-600',
       bg: 'bg-blue-50',
       fields: [
-        { label: 'لغة النظام', value: language, onChange: setLanguage, type: 'select', options: [{label: 'العربية', value: 'ar'}, {label: 'English', value: 'en'}] },
+        { label: 'لغة النظام', value: 'ar', onChange: () => {}, type: 'select', options: [{label: 'العربية', value: 'ar'}, {label: 'English', value: 'en'}] },
       ]
     }
   ];

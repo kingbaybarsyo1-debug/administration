@@ -112,3 +112,14 @@ export interface DashboardStats {
   salesByMonth: { month: string; amount: number }[];
   topProducts: { name: string; sales: number }[];
 }
+
+export interface StoreSettings {
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
+  logo?: string;
+  taxNumber?: string;
+  currency: string;
+  taxRate: number;
+}
